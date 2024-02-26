@@ -22,7 +22,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     const Color(0xFFA33378),
     Colors.deepOrangeAccent,
   ]; // List of colors
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
   void updateColor(Color color) {
     setState(() {
       selectedColor = color;
@@ -40,12 +43,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
+        toolbarHeight: height * .07,
         backgroundColor: Colors.transparent,
-        title: const Center(
+        title: Center(
           child: Text(
             'Sankook',
             style: TextStyle(
-              fontSize: 40,
+              fontSize: width * .09,
               color: Color(0xFFA33378),
             ),
           ),
@@ -76,16 +80,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   onPressed: () {
                     // _showGameModeSelectionDialog(context);
                     isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-1-186886.mp3");
+                    _showColorSelectionDialog(context,width);
                     setState(() {
                       isGameModesVisible = !isGameModesVisible;
-                      _showColorSelectionDialog(context);
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     'Play',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: width * .07,
                       letterSpacing: 2,
                     ),
                   ),
@@ -153,11 +157,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       isSoundSettingsVisible = !isSoundSettingsVisible;
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     'Settings',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: width * .07,
                       letterSpacing: 2,
                     ),
                   ),
@@ -165,8 +169,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 if (isSoundSettingsVisible)
                   Padding(
                     padding: EdgeInsets.only(
-                      left: width * .15,
-                      right: width * .15,
+                      left: width * .1,
+                      right: width * .1,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -187,11 +191,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 'Background Sound',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: width * .04,
                                   letterSpacing: 2,
                                 ),
                               ),
@@ -225,8 +229,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           ),
                           onPressed: () {
                             isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                            FlameAudio.bgm.stop();
                             setState(() {
-                              FlameAudio.bgm.stop();
                               isInteractionSoundMuted =
                                   !isInteractionSoundMuted;
                             });
@@ -234,19 +238,19 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 'Interaction Sound',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: width * .04,
                                   letterSpacing: 2,
                                 ),
                               ),
                               IconButton(
                                 onPressed: () {
                                   isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                                  FlameAudio.bgm.stop();
                                   setState(() {
-                                    FlameAudio.bgm.stop();
                                     isInteractionSoundMuted =
                                         !isInteractionSoundMuted;
                                   });
@@ -272,13 +276,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   ),
                   onPressed: () {
                     isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-3-186888.mp3");
-                    _showExitConfirmationDialog(context);
+                    _showExitConfirmationDialog(context,width);
                   },
-                  child: const Text(
+                  child: Text(
                     'Exit',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: width * .07,
                       letterSpacing: 2,
                     ),
                   ),
@@ -291,17 +295,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     );
   }
 
-  _showExitConfirmationDialog(BuildContext context) {
+  _showExitConfirmationDialog(BuildContext context, double width) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color(0xFFA33378).withOpacity(.6),
-          title: const Text(
+          title: Text(
             'Exit Game',
             style: TextStyle(
               color: Colors.white,
               letterSpacing: 2,
+              // fontSize: width * .07,
             ),
           ),
           content: const Text(
@@ -317,11 +322,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
                 Navigator.of(context).pop();
               },
-              child: const Text(
+              child: Text(
                 'No',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  // fontSize: width * .07,
                   letterSpacing: 2,
                 ),
               ),
@@ -333,11 +338,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                 // Add code here to exit the game
               },
-              child: const Text(
+              child: Text(
                 'Yes',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  // fontSize: width * .07,
                   letterSpacing: 2,
                 ),
               ),
@@ -409,18 +414,20 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   //   );
   // }
 
-  void _showColorSelectionDialog(BuildContext context) {
+  void _showColorSelectionDialog(BuildContext context, double width) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.black.withOpacity(.3),
-          title: const Text(
+          title: Text(
             'Select Snake Color',
             style: TextStyle(
               color: Colors.white,
               letterSpacing: 2,
+              fontSize: width * .07,
             ),
+            textAlign: TextAlign.center,
           ),
           content: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -432,8 +439,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   color: Colors.black.withOpacity(.5),
                   borderRadius: BorderRadius.circular(20)
                 ),
-                width: 100,
-                height: 50,
+                width: width * .225,
+                height: width * .125,
                 child: InkWell(
                   onTap: () {
                     isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
@@ -447,10 +454,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     );
                   },
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        height: 20,
-                        width: 20,
+                        height: width * .05,
+                        width: width * .05,
                         padding: const EdgeInsets.all(3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -460,8 +468,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                         ),
                       ),
                       Container(
-                        height: 20,
-                        width: 20,
+                        height: width * .05,
+                        width: width * .05,
                         padding: const EdgeInsets.all(3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -471,8 +479,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                         ),
                       ),
                       Container(
-                        height: 20,
-                        width: 20,
+                        height: width * .05,
+                        width: width * .05,
                         padding: const EdgeInsets.all(3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -482,8 +490,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                         ),
                       ),
                       Container(
-                        height: 20,
-                        width: 20,
+                        height: width * .05,
+                        width: width * .05,
                         padding: const EdgeInsets.all(3),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
