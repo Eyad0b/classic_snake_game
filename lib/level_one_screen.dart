@@ -2,11 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Level1Screen extends StatefulWidget {
-  Level1Screen(this.snakeColor, this.isInteractionSoundMuted, {Key? key})
+  const Level1Screen(this.snakeColor, this.isInteractionSoundMuted, {Key? key})
       : super(key: key);
   final Color snakeColor;
   final bool isInteractionSoundMuted;
@@ -126,7 +125,7 @@ class _Level1ScreenState extends State<Level1Screen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Your score is ' + (snakePosition.length - 4).toString(),
+                  'Your score is ${(snakePosition.length - 4).toString()}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -495,7 +494,7 @@ class _Level1ScreenState extends State<Level1Screen> {
                                   : FlameAudio.play("jug-pop-1-186886.mp3");
                               startGame();
                             },
-                            child: Row(
+                            child: const Row(
                               children: [
                                 Text(
                                   'Start',

@@ -1,9 +1,5 @@
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'home_screen.dart';
-import 'level_one_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainMenuScreen(),
+      home: const MainMenuScreen(),
     );
   }
 

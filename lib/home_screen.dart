@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 import 'level_one_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
+  const MainMenuScreen({Key? key}) : super(key: key);
+
   @override
-  _MainMenuScreenState createState() => _MainMenuScreenState();
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
 }
 
-class _MainMenuScreenState extends State<MainMenuScreen> {
+class _MainMenuScreenState extends State<MainMenuScreen> with WidgetsBindingObserver {// use this (with WidgetsBindingObserver)  with didChangeAppLifecycleState so I can read the APP State
   bool isSoundSettingsVisible = false;
   bool isGameModesVisible = false;
   bool isBackgroundSoundMuted = false;
@@ -22,10 +24,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     const Color(0xFFA33378),
     Colors.deepOrangeAccent,
   ]; // List of colors
+
+  var width;
+  var height;
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);// use this with didChangeAppLifecycleState so I can read the APP State
+    FlameAudio.bgm.stop(); // Stop background music
     super.dispose();
   }
+
   void updateColor(Color color) {
     setState(() {
       selectedColor = color;
@@ -33,13 +42,33 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   @override
+  void initState() {
+    FlameAudio.bgm.play(
+        "forest-with-small-river-birds-and-nature-field-recording-6735.mp3");
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);// use this with didChangeAppLifecycleState so I can read the APP State
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive) {
+      // App is in the background
+      isBackgroundSoundMuted = true;
+    } else if (state == AppLifecycleState.resumed) {
+      // App is back in the foreground
+      isBackgroundSoundMuted = false;
+    }
+    setState(() {});
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    isBackgroundSoundMuted
-        ? null
-        : FlameAudio.bgm.play(
-            "forest-with-small-river-birds-and-nature-field-recording-6735.mp3");
+
+    isBackgroundSoundMuted ? FlameAudio.bgm.pause() : FlameAudio.bgm.resume();
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -50,7 +79,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             'Sankook',
             style: TextStyle(
               fontSize: width * .09,
-              color: Color(0xFFA33378),
+              color: const Color(0xFFA33378),
             ),
           ),
         ),
@@ -79,8 +108,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   ),
                   onPressed: () {
                     // _showGameModeSelectionDialog(context);
-                    isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-1-186886.mp3");
-                    _showColorSelectionDialog(context,width);
+                    isInteractionSoundMuted
+                        ? null
+                        : FlameAudio.play("jug-pop-1-186886.mp3");
+                    _showColorSelectionDialog(context, width);
                     setState(() {
                       isGameModesVisible = !isGameModesVisible;
                     });
@@ -152,7 +183,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     ),
                   ),
                   onPressed: () {
-                    isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-1-186886.mp3");
+                    isInteractionSoundMuted
+                        ? null
+                        : FlameAudio.play("jug-pop-1-186886.mp3");
                     setState(() {
                       isSoundSettingsVisible = !isSoundSettingsVisible;
                     });
@@ -182,9 +215,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             ),
                           ),
                           onPressed: () {
-                            isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                            isInteractionSoundMuted
+                                ? null
+                                : FlameAudio.play("jug-pop-2-186887.mp3");
                             setState(() {
-                              FlameAudio.bgm.stop();
                               isBackgroundSoundMuted = !isBackgroundSoundMuted;
                             });
                           },
@@ -201,7 +235,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                                  isInteractionSoundMuted
+                                      ? null
+                                      : FlameAudio.play("jug-pop-2-186887.mp3");
                                   setState(() {
                                     FlameAudio.bgm.stop();
                                     isBackgroundSoundMuted =
@@ -228,7 +264,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                             ),
                           ),
                           onPressed: () {
-                            isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                            isInteractionSoundMuted
+                                ? null
+                                : FlameAudio.play("jug-pop-2-186887.mp3");
                             FlameAudio.bgm.stop();
                             setState(() {
                               isInteractionSoundMuted =
@@ -248,7 +286,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                                  isInteractionSoundMuted
+                                      ? null
+                                      : FlameAudio.play("jug-pop-2-186887.mp3");
                                   FlameAudio.bgm.stop();
                                   setState(() {
                                     isInteractionSoundMuted =
@@ -275,8 +315,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                     ),
                   ),
                   onPressed: () {
-                    isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-3-186888.mp3");
-                    _showExitConfirmationDialog(context,width);
+                    isInteractionSoundMuted
+                        ? null
+                        : FlameAudio.play("jug-pop-3-186888.mp3");
+                    _showExitConfirmationDialog(context, width);
                   },
                   child: Text(
                     'Exit',
@@ -300,8 +342,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color(0xFFA33378).withOpacity(.6),
-          title: Text(
+          backgroundColor: const Color(0xFFA33378).withOpacity(.6),
+          title: const Text(
             'Exit Game',
             style: TextStyle(
               color: Colors.white,
@@ -319,10 +361,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                isInteractionSoundMuted
+                    ? null
+                    : FlameAudio.play("jug-pop-2-186887.mp3");
                 Navigator.of(context).pop();
               },
-              child: Text(
+              child: const Text(
                 'No',
                 style: TextStyle(
                   color: Colors.white,
@@ -333,12 +377,14 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             TextButton(
               onPressed: () {
-                isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                isInteractionSoundMuted
+                    ? null
+                    : FlameAudio.play("jug-pop-2-186887.mp3");
                 Navigator.of(context).pop();
                 SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                 // Add code here to exit the game
               },
-              child: Text(
+              child: const Text(
                 'Yes',
                 style: TextStyle(
                   color: Colors.white,
@@ -435,21 +481,23 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             children: colors.map((color) {
               return Container(
                 decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.black.withOpacity(.5),
-                  borderRadius: BorderRadius.circular(20)
-                ),
+                    shape: BoxShape.rectangle,
+                    color: Colors.black.withOpacity(.5),
+                    borderRadius: BorderRadius.circular(20)),
                 width: width * .225,
                 height: width * .125,
                 child: InkWell(
                   onTap: () {
-                    isInteractionSoundMuted ? null : FlameAudio.play("jug-pop-2-186887.mp3");
+                    isInteractionSoundMuted
+                        ? null
+                        : FlameAudio.play("jug-pop-2-186887.mp3");
                     updateColor(color);
                     Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Level1Screen(selectedColor,isInteractionSoundMuted),
+                        builder: (context) => Level1Screen(
+                            selectedColor, isInteractionSoundMuted),
                       ),
                     );
                   },
