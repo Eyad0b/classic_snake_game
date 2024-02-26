@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 class Level1Screen extends StatefulWidget {
   Level1Screen(this.snakeColor, this.isInteractionSoundMuted, {Key? key})
       : super(key: key);
-  Color snakeColor;
-  bool isInteractionSoundMuted;
+  final Color snakeColor;
+  final bool isInteractionSoundMuted;
 
   @override
   State<Level1Screen> createState() => _Level1ScreenState();
@@ -532,11 +532,11 @@ class _Level1ScreenState extends State<Level1Screen> {
                                 'End',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .subtitle2!
+                                    .titleMedium!
                                     .copyWith(
-                                      color: Colors.white,
-                                      fontSize: height * .025,
-                                    ),
+                                  color: Colors.white,
+                                  fontSize: height * .025,
+                                ),
                               ),
                               SizedBox(
                                 width: width * .02,
